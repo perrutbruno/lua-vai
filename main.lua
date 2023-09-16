@@ -6,7 +6,7 @@ local functionParams = {}
 local performOperations = require("packages.operations")
 
 function interpret(node)
-    local file = io.open("files/let.json", "r")
+    local file = io.open("files/sum.json", "r")
     if file then
         local ast = file:read("*a")
         file:close()
@@ -69,14 +69,22 @@ function parse(ast)
             ["Add"] = "+",
             ["Sub"] = "-",
             ["Div"] = "/",
-            ["Mul"] = "*"
+            ["Mul"] = "*",
+            ["Eq"] = "=="
         }
 
-        if ast.lhs.kind == "Int" and ast.rhs.kind == "Int" then
-            local operator = operators[tostring(ast.op)]
-            performOperation(operator, tonumber(ast.lhs.value), tonumber(ast.rhs.value))
+        local operator = operators[tostring(ast.op)]
+        return performOperation(operator, tonumber(parse(ast.lhs)), tonumber(parse(ast.rhs)))
+    end
+
+    if ast.kind == "If" then 
+        if parse(ast.condition) then
+            return parse(ast["then"])
+        else
+            return parse(ast.otherwise)
         end
     end
+
 end
 
 local variables = {}

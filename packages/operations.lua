@@ -11,6 +11,8 @@ function performOperation(operator, operand1, operand2)
         else
             return "Division by zero"
         end
+    elseif operator == "==" then
+        return operand1 == operand2
     else
         return "Invalid operator"
     end
