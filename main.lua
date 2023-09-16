@@ -2,6 +2,7 @@ package.path = package.path .. ";packages/?.lua"
 
 local json = require("json")
 local variables = {}
+local functionParams = {}
 local performOperations = require("packages.operations")
 
 function interpret(node)
@@ -36,7 +37,14 @@ function parse(ast)
 
     if ast.kind == "Call" then
         -- TODO checar se é sempre "Var"
-        variables[ast.callee.text](ast.arguments[1].value)
+        local arguments = {}
+        for k, v in ipairs(ast.arguments) do
+            arguments[k] = parse(v)
+        end
+        for k, v in ipairs(functionParams) do
+            variables[v] = arguments[k]
+        end
+        return variables[ast.callee.text]()
     end
 
     if ast.kind == "Int" then
@@ -45,7 +53,7 @@ function parse(ast)
 
     if ast.kind == "Function" then
         for k, v in ipairs(ast.parameters) do
-            table.insert(variables, v.text)
+            table.insert(functionParams, v.text)
         end
         return function()
             return parse(ast.value)
@@ -73,17 +81,17 @@ end
 
 local variables = {}
 
--- function dump(o)
---     if type(o) == 'table' then
---         local s = '{ '
---         for k, v in pairs(o) do
---             if type(k) ~= 'number' then k = '"' .. k .. '"' end
---             s = s .. '[' .. k .. '] = ' .. dump(v) .. ','
---         end
---         return s .. '} '
---     else
---         return tostring(o)
---     end
--- end
+function dump(o)
+    if type(o) == 'table' then
+        local s = '{ '
+        for k, v in pairs(o) do
+            if type(k) ~= 'number' then k = '"' .. k .. '"' end
+            s = s .. '[' .. k .. '] = ' .. dump(v) .. ','
+        end
+        return s .. '} '
+    else
+        return tostring(o)
+    end
+end
 
 interpret(1)
