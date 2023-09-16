@@ -1,10 +1,17 @@
 package.path = package.path .. ";packages/?.lua"
 
 local json = require("json")
+<<<<<<< HEAD
 local variables = {}
 
 function interpret(node)
     local file = io.open("files/let.json", "r")
+=======
+local performOperations = require("packages.operations")
+
+function interpret(node)
+    local file = io.open("files/soma.json", "r")
+>>>>>>> 7de33f181ad7b2bc39b8e02f3b49264ce2f927e3
     if file then
         local ast = file:read("*a")
         file:close()
@@ -16,7 +23,6 @@ function interpret(node)
 end
 
 function parse(ast)
-
     if ast.kind == "Print" then
         print(parse(ast.value))
     end
@@ -56,19 +62,35 @@ function parse(ast)
         return variables[ast.text]
     end
 
+    if ast.kind == "Binary" then
+        local operators = {
+            ["Add"] = "+",
+            ["Sub"] = "-",
+            ["Div"] = "/",
+            ["Mul"] = "*"
+        }
+
+        if ast.lhs.kind == "Int" and ast.rhs.kind == "Int" then
+            local operator = operators[tostring(ast.op)]
+            performOperation(operator, tonumber(ast.lhs.value), tonumber(ast.rhs.value))
+        end
+    end
 end
 
-function dump(o)
-    if type(o) == 'table' then
-       local s = '{ '
-       for k,v in pairs(o) do
-          if type(k) ~= 'number' then k = '"'..k..'"' end
-          s = s .. '['..k..'] = ' .. dump(v) .. ','
-       end
-       return s .. '} '
-    else
-       return tostring(o)
-    end
- end
+local variables = {}
+
+-- function dump(o)
+--     if type(o) == 'table' then
+--         local s = '{ '
+--         for k, v in pairs(o) do
+--             if type(k) ~= 'number' then k = '"' .. k .. '"' end
+--             s = s .. '[' .. k .. '] = ' .. dump(v) .. ','
+--         end
+--         return s .. '} '
+--     else
+--         return tostring(o)
+--     end
+-- end
+>>>>>>> 7de33f181ad7b2bc39b8e02f3b49264ce2f927e3
 
 interpret(1)
