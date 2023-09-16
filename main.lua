@@ -7,6 +7,7 @@ local performOperations = require("packages.operations")
 
 function interpret(node)
     local file = io.open("files/fib.json", "r")
+
     if file then
         local ast = file:read("*a")
         file:close()
@@ -78,14 +79,13 @@ function parse(ast)
         return performOperation(operator, tonumber(parse(ast.lhs)), tonumber(parse(ast.rhs)))
     end
 
-    if ast.kind == "If" then 
+    if ast.kind == "If" then
         if parse(ast.condition) then
             return parse(ast["then"])
         else
             return parse(ast.otherwise)
         end
     end
-
 end
 
 local variables = {}
