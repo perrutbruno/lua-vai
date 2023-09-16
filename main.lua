@@ -7,10 +7,7 @@ function interpret(node)
     if file then
         local ast = file:read("*a")
         file:close()
-
-        --saving it as a lua table so we can retrieve its values
         local ast_data = json.decode(ast)
-
         parse(ast_data.expression)
     else
         error("Could not find the AST file")
@@ -27,7 +24,27 @@ function parse(ast)
         return ast.value
     end
 
+    if ast.kind == "Bool" then
+        return ast.value
+    end
+
+    if ast.kind == "Let" then
+        variables[ast.name.text] = parse(ast.value)
+        return parse(ast.next)
+    end
+
+    if ast.kind == "Call" then
+        -- TODO checar se é sempre "Var"
+        variables[ast.callee.text](ast.arguments[0])
+    end
+
+    if ast.kind == "Int" then
+        return ast.value
+    end
+
 end
+
+local variables = {}
 
 -- function dump(o)
 --     if type(o) == 'table' then
