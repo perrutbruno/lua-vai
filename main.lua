@@ -91,6 +91,5 @@ local variables = {}
 --         return tostring(o)
 --     end
 -- end
->>>>>>> 7de33f181ad7b2bc39b8e02f3b49264ce2f927e3
 
 interpret(1)
