@@ -1,17 +1,11 @@
 package.path = package.path .. ";packages/?.lua"
 
 local json = require("json")
-<<<<<<< HEAD
 local variables = {}
-
-function interpret(node)
-    local file = io.open("files/let.json", "r")
-=======
 local performOperations = require("packages.operations")
 
 function interpret(node)
-    local file = io.open("files/soma.json", "r")
->>>>>>> 7de33f181ad7b2bc39b8e02f3b49264ce2f927e3
+    local file = io.open("files/let.json", "r")
     if file then
         local ast = file:read("*a")
         file:close()
