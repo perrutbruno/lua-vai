@@ -1,9 +1,10 @@
 package.path = package.path .. ";packages/?.lua"
 
 local json = require("json")
+local performOperations = require("packages.operations")
 
 function interpret(node)
-    local file = io.open("files/print.json", "r")
+    local file = io.open("files/soma.json", "r")
     if file then
         local ast = file:read("*a")
         file:close()
@@ -15,7 +16,6 @@ function interpret(node)
 end
 
 function parse(ast)
-
     if ast.kind == "Print" then
         print(parse(ast.value))
     end
@@ -42,21 +42,34 @@ function parse(ast)
         return ast.value
     end
 
+    if ast.kind == "Binary" then
+        local operators = {
+            ["Add"] = "+",
+            ["Sub"] = "-",
+            ["Div"] = "/",
+            ["Mul"] = "*"
+        }
+
+        if ast.lhs.kind == "Int" and ast.rhs.kind == "Int" then
+            local operator = operators[tostring(ast.op)]
+            performOperation(operator, tonumber(ast.lhs.value), tonumber(ast.rhs.value))
+        end
+    end
 end
 
 local variables = {}
 
 -- function dump(o)
 --     if type(o) == 'table' then
---        local s = '{ '
---        for k,v in pairs(o) do
---           if type(k) ~= 'number' then k = '"'..k..'"' end
---           s = s .. '['..k..'] = ' .. dump(v) .. ','
---        end
---        return s .. '} '
+--         local s = '{ '
+--         for k, v in pairs(o) do
+--             if type(k) ~= 'number' then k = '"' .. k .. '"' end
+--             s = s .. '[' .. k .. '] = ' .. dump(v) .. ','
+--         end
+--         return s .. '} '
 --     else
---        return tostring(o)
+--         return tostring(o)
 --     end
---  end
+-- end
 
 interpret(1)
