@@ -13,6 +13,8 @@ function performOperation(operator, operand1, operand2)
         end
     elseif operator == "==" then
         return operand1 == operand2
+    elseif operator == "<" then
+        return operand1 < operand2
     else
         return "Invalid operator"
     end

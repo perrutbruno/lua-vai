@@ -6,7 +6,7 @@ local functionParams = {}
 local performOperations = require("packages.operations")
 
 function interpret(node)
-    local file = io.open("files/sum.json", "r")
+    local file = io.open("files/fib.json", "r")
     if file then
         local ast = file:read("*a")
         file:close()
@@ -70,7 +70,8 @@ function parse(ast)
             ["Sub"] = "-",
             ["Div"] = "/",
             ["Mul"] = "*",
-            ["Eq"] = "=="
+            ["Eq"] = "==",
+            ["Lt"] = "<"
         }
 
         local operator = operators[tostring(ast.op)]
