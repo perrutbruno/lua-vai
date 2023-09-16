@@ -1,1 +1,43 @@
-{"name":"somas.rinha","expression":{"kind":"Print","value":{"kind":"Binary","lhs":{"kind":"Int","value":50,"location":{"start":7,"end":9,"filename":"somas.rinha"}},"op":"Div","rhs":{"kind":"Int","value":10,"location":{"start":12,"end":14,"filename":"somas.rinha"}},"location":{"start":7,"end":14,"filename":"somas.rinha"}},"location":{"start":0,"end":15,"filename":"somas.rinha"}},"location":{"start":0,"end":15,"filename":"somas.rinha"}}
+{
+    "name": "somas.rinha",
+    "expression": {
+        "kind": "Print",
+        "value": {
+            "kind": "Binary",
+            "lhs": {
+                "kind": "Int",
+                "value": 50,
+                "location": {
+                    "start": 7,
+                    "end": 9,
+                    "filename": "somas.rinha"
+                }
+            },
+            "op": "Div",
+            "rhs": {
+                "kind": "Int",
+                "value": 10,
+                "location": {
+                    "start": 12,
+                    "end": 14,
+                    "filename": "somas.rinha"
+                }
+            },
+            "location": {
+                "start": 7,
+                "end": 14,
+                "filename": "somas.rinha"
+            }
+        },
+        "location": {
+            "start": 0,
+            "end": 15,
+            "filename": "somas.rinha"
+        }
+    },
+    "location": {
+        "start": 0,
+        "end": 15,
+        "filename": "somas.rinha"
+    }
+}
