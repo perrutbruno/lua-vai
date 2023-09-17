@@ -3,6 +3,8 @@ package.path = package.path .. ";packages/?.lua"
 local json = require("json")
 local operations = require("packages.operations")
 local table_utils = require("packages.table_utils")
+local first = require("packages.first")
+local second = require("packages.second")
 
 function main()
     local file = io.open("files/" .. arg[1] .. ".json", "r")
@@ -17,7 +19,6 @@ function main()
 end
 
 function parse(ast, env)
-
     if ast.kind == "Str" then
         return ast.value
     end
@@ -79,14 +80,11 @@ function parse(ast, env)
     end
 
     if ast.kind == "Tuple" then
-        for k, v in ipairs(ast.parameters) do
-            table.insert(env, v.text)
-        end
-        return function(newEnv)
-            return parse(ast.value, newEnv)
-        end
+        local tuple = {}
+        table.insert(tuple, ast.first)
+        table.insert(tuple, ast.second)
+        return tuple
     end
-
 end
 
 main()
