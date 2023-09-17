@@ -5,7 +5,7 @@ local performOperations = require("packages.operations")
 local tableUtils = require("packages.tableUtils")
 
 function interpret(node)
-    local file = io.open("files/fib.json", "r")
+    local file = io.open("files/combination.json", "r")
 
     if file then
         local ast = file:read("*a")
