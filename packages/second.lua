@@ -4,6 +4,6 @@ function second(args)
         local second_value = args.value.second.value
         return second_value
     else
-        error("First method can only be called on a tuple!")
+        error("Second method can only be called on a tuple!")
     end
 end
