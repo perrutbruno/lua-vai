@@ -19,7 +19,9 @@ end
 
 function parse(ast, env)
     if ast.kind == "Print" then
-        print(parse(ast.value, env))
+        local result = parse(ast.value, env)
+        print(result)
+        return result
     end
 
     if ast.kind == "Str" then
