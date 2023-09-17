@@ -1,9 +1,8 @@
 package.path = package.path .. ";packages/?.lua"
 
 local json = require("json")
-local variables = {}
-local functionParams = {}
 local performOperations = require("packages.operations")
+local tableUtils = require("packages.tableUtils")
 
 function interpret(node)
     local file = io.open("files/fib.json", "r")
@@ -12,15 +11,15 @@ function interpret(node)
         local ast = file:read("*a")
         file:close()
         local ast_data = json.decode(ast)
-        parse(ast_data.expression)
+        parse(ast_data.expression, {})
     else
         error("Could not find the AST file")
     end
 end
 
-function parse(ast)
+function parse(ast, env)
     if ast.kind == "Print" then
-        print(parse(ast.value))
+        print(parse(ast.value, env))
     end
 
     if ast.kind == "Str" then
@@ -32,20 +31,20 @@ function parse(ast)
     end
 
     if ast.kind == "Let" then
-        variables[ast.name.text] = parse(ast.value)
-        return parse(ast.next)
+        env[ast.name.text] = parse(ast.value, env)
+        return parse(ast.next, env)
     end
 
     if ast.kind == "Call" then
-        -- TODO checar se é sempre "Var"
         local arguments = {}
         for k, v in ipairs(ast.arguments) do
-            arguments[k] = parse(v)
+            arguments[k] = parse(v, env)
         end
-        for k, v in ipairs(functionParams) do
-            variables[v] = arguments[k]
+        local newEnv = deepcopy(env)
+        for k, v in ipairs(env) do
+            newEnv[v] = arguments[k]
         end
-        return variables[ast.callee.text]()
+        return parse(ast.callee, newEnv)(newEnv)
     end
 
     if ast.kind == "Int" then
@@ -54,52 +53,27 @@ function parse(ast)
 
     if ast.kind == "Function" then
         for k, v in ipairs(ast.parameters) do
-            table.insert(functionParams, v.text)
+            table.insert(env, v.text)
         end
-        return function()
-            return parse(ast.value)
+        return function(newEnv)
+            return parse(ast.value, newEnv)
         end
     end
 
     if ast.kind == "Var" then
-        return variables[ast.text]
+        return env[ast.text]
     end
 
     if ast.kind == "Binary" then
-        local operators = {
-            ["Add"] = "+",
-            ["Sub"] = "-",
-            ["Div"] = "/",
-            ["Mul"] = "*",
-            ["Eq"] = "==",
-            ["Lt"] = "<"
-        }
-
-        local operator = operators[tostring(ast.op)]
-        return performOperation(operator, tonumber(parse(ast.lhs)), tonumber(parse(ast.rhs)))
+        return performOperation(ast.op, parse(ast.lhs, env), parse(ast.rhs, env))
     end
 
     if ast.kind == "If" then
-        if parse(ast.condition) then
-            return parse(ast["then"])
+        if parse(ast.condition, env) then
+            return parse(ast["then"], env)
         else
-            return parse(ast.otherwise)
+            return parse(ast.otherwise, env)
         end
-    end
-end
-
-local variables = {}
-
-function dump(o)
-    if type(o) == 'table' then
-        local s = '{ '
-        for k, v in pairs(o) do
-            if type(k) ~= 'number' then k = '"' .. k .. '"' end
-            s = s .. '[' .. k .. '] = ' .. dump(v) .. ','
-        end
-        return s .. '} '
-    else
-        return tostring(o)
     end
 end
 
