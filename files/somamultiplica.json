@@ -18,17 +18,17 @@
                 "kind": "Binary",
                 "lhs": {
                     "kind": "Int",
-                    "value": 1000,
+                    "value": 10,
                     "location": {
                         "start": 12,
                         "end": 14,
                         "filename": "somas.rinha"
                     }
                 },
-                "op": "Add",
+                "op": "Mul",
                 "rhs": {
                     "kind": "Int",
-                    "value": 30,
+                    "value": 2,
                     "location": {
                         "start": 17,
                         "end": 19,

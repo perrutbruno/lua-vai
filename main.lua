@@ -78,6 +78,15 @@ function parse(ast, env)
         return parse(ast.callee, newEnv)(newEnv)
     end
 
+    if ast.kind == "Tuple" then
+        for k, v in ipairs(ast.parameters) do
+            table.insert(env, v.text)
+        end
+        return function(newEnv)
+            return parse(ast.value, newEnv)
+        end
+    end
+
 end
 
 main()
