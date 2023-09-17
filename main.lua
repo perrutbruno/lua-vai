@@ -3,6 +3,8 @@ package.path = package.path .. ";packages/?.lua"
 local json = require("json")
 local operations = require("packages.operations")
 local table_utils = require("packages.table_utils")
+local first = require("packages.first")
+local second = require("packages.second")
 
 function main()
     local file = io.open("files/" .. arg[1] .. ".json", "r")
