@@ -18,11 +18,6 @@ function interpret(node)
 end
 
 function parse(ast, env)
-    if ast.kind == "Print" then
-        local result = parse(ast.value, env)
-        print(result)
-        return result
-    end
 
     if ast.kind == "Str" then
         return ast.value
@@ -32,9 +27,44 @@ function parse(ast, env)
         return ast.value
     end
 
+    if ast.kind == "Int" then
+        return ast.value
+    end
+
+    if ast.kind == "Var" then
+        return env[ast.text]
+    end
+
+    if ast.kind == "Binary" then
+        return performOperation(ast.op, parse(ast.lhs, env), parse(ast.rhs, env))
+    end
+
     if ast.kind == "Let" then
         env[ast.name.text] = parse(ast.value, env)
         return parse(ast.next, env)
+    end
+
+    if ast.kind == "Print" then
+        local result = parse(ast.value, env)
+        print(result)
+        return result
+    end
+
+    if ast.kind == "If" then
+        if parse(ast.condition, env) then
+            return parse(ast["then"], env)
+        else
+            return parse(ast.otherwise, env)
+        end
+    end
+
+    if ast.kind == "Function" then
+        for k, v in ipairs(ast.parameters) do
+            table.insert(env, v.text)
+        end
+        return function(newEnv)
+            return parse(ast.value, newEnv)
+        end
     end
 
     if ast.kind == "Call" then
@@ -49,34 +79,6 @@ function parse(ast, env)
         return parse(ast.callee, newEnv)(newEnv)
     end
 
-    if ast.kind == "Int" then
-        return ast.value
-    end
-
-    if ast.kind == "Function" then
-        for k, v in ipairs(ast.parameters) do
-            table.insert(env, v.text)
-        end
-        return function(newEnv)
-            return parse(ast.value, newEnv)
-        end
-    end
-
-    if ast.kind == "Var" then
-        return env[ast.text]
-    end
-
-    if ast.kind == "Binary" then
-        return performOperation(ast.op, parse(ast.lhs, env), parse(ast.rhs, env))
-    end
-
-    if ast.kind == "If" then
-        if parse(ast.condition, env) then
-            return parse(ast["then"], env)
-        else
-            return parse(ast.otherwise, env)
-        end
-    end
 end
 
 interpret(1)
