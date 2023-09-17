@@ -1,4 +1,4 @@
-function performOperation(operator, operand1, operand2)
+function perform_operation(operator, operand1, operand2)
     if operator == "Add" then
         return operand1 + operand2
     elseif operator == "Sub" then

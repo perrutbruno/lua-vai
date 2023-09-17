@@ -1,8 +1,8 @@
 package.path = package.path .. ";packages/?.lua"
 
 local json = require("json")
-local performOperations = require("packages.operations")
-local tableUtils = require("packages.tableUtils")
+local operations = require("packages.operations")
+local table_utils = require("packages.table_utils")
 
 function main()
     local file = io.open("files/" .. arg[1] .. ".json", "r")
@@ -35,7 +35,7 @@ function parse(ast, env)
     end
 
     if ast.kind == "Binary" then
-        return performOperation(ast.op, parse(ast.lhs, env), parse(ast.rhs, env))
+        return perform_operation(ast.op, parse(ast.lhs, env), parse(ast.rhs, env))
     end
 
     if ast.kind == "Let" then
