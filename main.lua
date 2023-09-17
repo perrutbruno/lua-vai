@@ -4,9 +4,8 @@ local json = require("json")
 local performOperations = require("packages.operations")
 local tableUtils = require("packages.tableUtils")
 
-function interpret(node)
-    local file = io.open("files/combination.json", "r")
-
+function main()
+    local file = io.open("files/" .. arg[1] .. ".json", "r")
     if file then
         local ast = file:read("*a")
         file:close()
@@ -81,4 +80,4 @@ function parse(ast, env)
 
 end
 
-interpret(1)
+main()
