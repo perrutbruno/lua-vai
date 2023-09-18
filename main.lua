@@ -81,17 +81,22 @@ function parse(ast, env)
 
     if ast.kind == "Tuple" then
         local tuple = {}
-        table.insert(tuple, ast.first)
-        table.insert(tuple, ast.second)
+        table.insert(tuple, parse(ast.first))
+        table.insert(tuple, parse(ast.second))
         return tuple
     end
 
     if ast.kind == "First" then
-        return parse(ast.value.first)
+        -- returns the 1st element of a tuple (only if its a tuple)
+        if args.kind == "First" and args.value.kind == "Tuple" then
+            return parse(ast.value.first)
+        end
     end
 
     if ast.kind == "Second" then
-        return parse(ast.value.second)
+        if args.kind == "Second" and args.value.kind == "Tuple" then
+            return parse(ast.value.second)
+        end
     end
 
 end
