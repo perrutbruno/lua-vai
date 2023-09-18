@@ -3,8 +3,6 @@ package.path = package.path .. ";packages/?.lua"
 local json = require("json")
 local operations = require("packages.operations")
 local table_utils = require("packages.table_utils")
-local first = require("packages.first")
-local second = require("packages.second")
 
 function main()
     local file = io.open("files/" .. arg[1] .. ".json", "r")
@@ -46,7 +44,12 @@ function parse(ast, env)
 
     if ast.kind == "Print" then
         local result = parse(ast.value, env)
-        print(result)
+        if type(result) == "table" then
+            -- print(dump(result))
+            print("(" .. result[1] .. ", " .. result[2] .. ")")
+        else
+            print(result)
+        end
         return result
     end
 
@@ -81,21 +84,21 @@ function parse(ast, env)
 
     if ast.kind == "Tuple" then
         local tuple = {}
-        table.insert(tuple, parse(ast.first))
-        table.insert(tuple, parse(ast.second))
+        table.insert(tuple, parse(ast.first, env))
+        table.insert(tuple, parse(ast.second, env))
         return tuple
     end
 
     if ast.kind == "First" then
         -- returns the 1st element of a tuple (only if its a tuple)
         if args.kind == "First" and args.value.kind == "Tuple" then
-            return parse(ast.value.first)
+            return parse(ast.value.first, env)
         end
     end
 
     if ast.kind == "Second" then
         if args.kind == "Second" and args.value.kind == "Tuple" then
-            return parse(ast.value.second)
+            return parse(ast.value.second, env)
         end
     end
 
