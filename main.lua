@@ -85,6 +85,15 @@ function parse(ast, env)
         table.insert(tuple, ast.second)
         return tuple
     end
+
+    if ast.kind == "First" then
+        return parse(ast.value.first)
+    end
+
+    if ast.kind == "Second" then
+        return parse(ast.value.second)
+    end
+
 end
 
 main()
