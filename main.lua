@@ -5,7 +5,7 @@ local operations = require("packages.operations")
 local table_utils = require("packages.table_utils")
 
 function main()
-    local file = io.open("files/" .. arg[1] .. ".json", "r")
+    local file = io.open("var/rinha/" .. arg[1] .. ".json", "r")
     if file then
         local ast = file:read("*a")
         file:close()
