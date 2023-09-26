@@ -1,4 +1,4 @@
 FROM nickblah/lua:5-alpine
 ENV file combination
-COPY . /
+COPY files/*.json /var/rinha/
 CMD lua main.lua $file
