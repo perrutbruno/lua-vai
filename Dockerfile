@@ -1,5 +1,5 @@
 FROM nickblah/lua:5-alpine
-ENV file source.rinha.json
+ENV file fib.json
 COPY files/*.json /var/rinha/
 COPY . /
 CMD lua main.lua $file
